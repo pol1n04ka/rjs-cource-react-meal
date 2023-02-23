@@ -1,48 +1,47 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const CartContext = createContext({
   cartItems: [],
+  itemsAmount: null,
   amount: null,
   onAddCartItem: (item) => {},
-  onSetAmount: (items) => {},
+  onRemoveCartItem: (id) => {},
 });
 
 const CartContextProvider = (props) => {
-  const ctx = useContext(CartContext);
-
   const [cartItems, setCartItems] = useState([]);
+  const [itemsAmount, setItemsAmount] = useState(0);
   const [amount, setAmount] = useState(0);
 
-  const onAddCartItem = (item) => {
-    setCartItems((prevState) => {
-      return {
-        ...prevState,
-        item,
-      };
-    });
-  };
-
-  const onSetAmount = (items) => {
+  useEffect(() => {
     let amount = 0.0;
+    let itemsAmount = 0;
 
-    // items.map((item) => {
-    //   amount += item.price.toFixed(2);
-    // });
-
-    items.forEach((item) => {
-      amount += item.price;
+    cartItems.forEach((item) => {
+      amount += item.price * item.amount;
+      itemsAmount += item.amount;
     });
 
     setAmount(amount);
+    setItemsAmount(itemsAmount);
+  }, [cartItems]);
+
+  const onAddCartItem = (item) => {
+    setCartItems((prevState) => {
+      return [...prevState, item];
+    });
   };
+
+  const onRemoveCartItem = (id) => {};
 
   return (
     <CartContext.Provider
       value={{
         cartItems: cartItems,
+        itemsAmount: itemsAmount,
         amount: amount,
         onAddCartItem: onAddCartItem,
-        onSetAmount: onSetAmount,
+        onRemoveCartItem: onRemoveCartItem,
       }}
     >
       {props.children}
