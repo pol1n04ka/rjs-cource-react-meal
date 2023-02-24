@@ -64,10 +64,10 @@ const cartReducer = (state, action) => {
     let newItem;
     let newItems = state.cartItems;
 
-    if (item.amount >= 1) {
+    if (item.amount > 1) {
       newItem = { ...item, amount: item.amount - 1 };
       newItems[itemIndex] = newItem;
-    } else {
+    } else if (item.amount === 1) {
       newItems.splice(itemIndex, 1);
     }
 
