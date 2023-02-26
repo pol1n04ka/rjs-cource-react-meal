@@ -2,8 +2,8 @@ import { createContext, useReducer } from "react";
 
 export const CartContext = createContext({
   cartItems: [],
-  itemsAmount: 0,
-  amount: 0.0,
+  itemsAmount: null,
+  amount: null,
   onAddCartItem: (item) => {},
   onRemoveCartItem: (id) => {},
 });
@@ -23,7 +23,7 @@ const cartReducer = (state, action) => {
       itemsAmount += item.amount;
     });
 
-    return { amount: amount, itemsAmount: itemsAmount };
+    return { amount, itemsAmount };
   };
 
   if (action.type === "ADD") {
@@ -56,7 +56,6 @@ const cartReducer = (state, action) => {
       amount: amount,
     };
   } else if (action.type === "DELETE") {
-    // console.log(`Reducer action DELETE. Id of object: ${action.id}`);
     const itemIndex = state.cartItems.findIndex(
       (item) => item.id === action.id
     );
@@ -73,7 +72,6 @@ const cartReducer = (state, action) => {
 
     const { amount, itemsAmount } = calcAmounts(newItems);
 
-    // return { ...state, cartItems: newItems };
     return {
       cartItems: newItems,
       itemsAmount: itemsAmount,
